@@ -1,0 +1,56 @@
+version: "3.8"
+
+services:
+  backend:
+    image: docker.zeroq.cl/zeroq-local:latest-v3-qa
+    container_name: zeroq
+    volumes:
+      # Montar directorios completos como en la configuración que funciona
+      - ~/local-local:/usr/src/app/backend/data # .env
+      - ~/local-local/assets:/usr/src/app/displays/assets # logos, videos, etc.
+    ports:
+      - "3030:3030"
+      - "8000:8000"
+    environment:
+      - NODE_ENV=development
+    # Cargar variables de entorno desde un archivo .env
+    env_file:
+      - ~/local-local/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    command: node index.js
+
+  postgres:
+    container_name: postgres
+    image: docker.zeroq.cl/postgres:alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=panther
+      - POSTGRES_PASSWORD=panther
+      - POSTGRES_DB=zeroq
+      - PGDATA=/var/lib/postgres/data
+    volumes:
+      - pgdata:/var/lib/postgres/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "panther"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: docker.zeroq.cl/redis:password
+    container_name: redis
+    volumes:
+      - rddata:/data
+
+volumes:
+  backend-node-modules:
+  pgdata:
+  rddata:
+
+networks:
+  default:
+    driver: bridge
