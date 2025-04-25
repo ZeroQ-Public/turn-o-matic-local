@@ -42,3 +42,21 @@ docker-compose down && docker-compose up -d
 ```
 
 Esto asegurará que estés utilizando la versión más reciente de la imagen proporcionada por ZeroQ.
+
+## Verificación
+
+Una vez que los contenedores estén en ejecución después de usar `docker-compose up -d`, puedes verificar si el servicio backend está funcionando correctamente abriendo tu navegador web y yendo a la dirección [http://localhost:3030](http://localhost:3030).
+
+Si todo está bien, deberías ver una respuesta en formato JSON similar a esta estructura:
+
+```json
+{
+  "name": "zeroq",
+  "version": "...",
+  "branch": "...",
+  "image": "...",
+  "ctime": "..."
+}
+```
+
+**Nota:** Los valores específicos para `version`, `branch`, `image` y `ctime` variarán dependiendo de la versión exacta de la imagen que estés utilizando, pero la presencia de esta estructura JSON indica que el backend se ha iniciado correctamente.
