@@ -1,16 +1,16 @@
-version: '3.8'
+version: "3.8"
 
 services:
   backend:
-    image: docker.zeroq.cl/zeroq-local:lastest-v3-qa
+    image: zeroq-local-legacy:multi-stage-fix
     container_name: zeroq
     volumes:
       # Montar directorios completos como en la configuración que funciona
       - ~/local-local:/usr/src/app/backend/data # .env
       - ~/local-local/assets:/usr/src/app/displays/assets # logos, videos, etc.
     ports:
-      - '3030:3030'
-      - '8000:8000'
+      - "3030:3030"
+      - "8000:8000"
     environment:
       - NODE_ENV=development
     # Cargar variables de entorno desde un archivo .env
@@ -35,7 +35,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgres/data
     healthcheck:
-      test: ['CMD', 'pg_isready', '-U', 'panther']
+      test: ["CMD", "pg_isready", "-U", "panther"]
       interval: 10s
       timeout: 5s
       retries: 5
