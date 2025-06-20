@@ -2,12 +2,13 @@ version: "3.8"
 
 services:
   backend:
-    image: zeroq-local-legacy:multi-stage-fix
+    # image: docker-test.zeroq.cl/zeroq-local:legacy-legacy-v1.0.14
+    image: docker-test.zeroq.cl/zeroq-local:new-v1.2.0
     container_name: zeroq
     volumes:
       # Montar directorios completos como en la configuración que funciona
-      - ~/local-local:/usr/src/app/backend/data # .env
-      - ~/local-local/assets:/usr/src/app/displays/assets # logos, videos, etc.
+      - ./backend/data:/usr/src/app/backend/data # directorio data con .env
+      - ./assets:/usr/src/app/displays/assets # logos, videos, etc.
     ports:
       - "3030:3030"
       - "8000:8000"
