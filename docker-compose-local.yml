@@ -1,0 +1,90 @@
+# Maintainer: Hervis Pichardo <hpichardo@zeroq.cl>
+#
+# edit in ~/.config/zeroq/docker-compose/docker-compose.yml,
+# ~/local/docker-compose.yml will be overwritten
+version: "3.8" # Version 3.8 de API docker-compose
+
+services:
+  proxy:
+    image: nginx:alpine
+    container_name: tls-proxy
+    ports:
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - /local/certs/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
+      - /local/certs/privkey.pem:/etc/ssl/private/privkey.pem:ro
+    depends_on:
+      - backend
+  backend:
+    container_name: zeroq
+    image: docker.zeroq.cl/zeroq-local:zeroq-stable
+    privileged: true
+    restart: unless-stopped
+    expose:
+      - "3030"
+    volumes:
+      - ~/local:/usr/src/app/backend/data # .env
+      - ~/local/assets:/usr/src/app/displays/assets # logos, videos, etc.
+    depends_on:
+      - db
+      - printer
+      - redis
+
+  db:
+    container_name: postgres
+    image: docker.zeroq.cl/postgres:15.4
+    restart: always
+    env_file:
+      - ~/local/.env
+    volumes:
+      - pgdata:/var/lib/postgres/data # Postgres persistence layer
+
+  printer:
+    container_name: printer
+    image: docker.zeroq.cl/printer:qr-information
+    restart: always
+    privileged: true # Necessary to lock /dev/usb
+    environment:
+      - PRINTER_TYPE= # (epson | chxp | primex | external)
+    env_file:
+      - ~/local/.env
+    ports:
+      - 3535:3535
+      - 6631:631 # CUPS
+    volumes:
+      - /dev/usb:/dev/usb
+      - ~/local:/usr/src/app/backend/data # environment variables
+      - ~/local/assets:/usr/src/app/assets # For external logo
+
+  rut:
+    container_name: rut
+    image: docker.zeroq.cl/zeroq-rut:latest
+    restart: always
+    ports:
+      - 4000:4000
+    volumes:
+      - ~/local/data:/usr/src/app/backend/data # requires file data.csv
+    depends_on:
+      - redis
+
+  media-server:
+    container_name: local-media-server
+    image: docker.zeroq.cl/local-media-server:1.0.11
+    restart: always
+    ports:
+      - 9000:9000
+    volumes:
+      - ~/local:/usr/src/app/assets
+
+  redis:
+    container_name: redis
+    image: docker.zeroq.cl/redis:password-v2
+    restart: always
+    volumes:
+      - rddata:/data # Redis persistence layer
+
+volumes:
+  displays: # Shared volume for custom displays
+  pgdata: # Volume for Postgres' persistence layer
+  rddata: # Volume for Redis' persistence layer

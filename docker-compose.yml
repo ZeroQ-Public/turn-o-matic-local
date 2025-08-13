@@ -1,22 +1,36 @@
-version: "3.8"
-
+# Maintainer: Hervis Pichardo <hpichardo@zeroq.cl>
+#
+# edit in ~/.config/zeroq/docker-compose/docker-compose.yml,
+# ~/local/docker-compose.yml will be overwritten
+version: "3.8" # Version 3.8 de API docker-compose
 services:
+  proxy:
+    image: nginx:alpine
+    container_name: tls-proxy
+    ports:
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt/live/cajalosandes.oangel.dev/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
+      - /etc/letsencrypt/live/cajalosandes.oangel.dev/privkey.pem:/etc/ssl/private/privkey.pem:ro
+    depends_on:
+      - backend
   backend:
-    # image: docker-test.zeroq.cl/zeroq-local:legacy-legacy-v1.0.14
-    image: docker-test.zeroq.cl/zeroq-local:new-v1.2.0
+    # image: docker-test.zeroq.cl/zeroq-local:legacy-legacy-v1.22.0
+    # image: docker.zeroq.cl/zeroq-local:rest-v2-cruz-verde-qa
+    image: docker.zeroq.cl/zeroq-local:rest-v2-cruz-verde-qa-1
     container_name: zeroq
     volumes:
       # Montar directorios completos como en la configuración que funciona
       - ./backend/data:/usr/src/app/backend/data # directorio data con .env
       - ./assets:/usr/src/app/displays/assets # logos, videos, etc.
-    ports:
-      - "3030:3030"
-      - "8000:8000"
+    expose:
+      - "3030"
     environment:
       - NODE_ENV=development
     # Cargar variables de entorno desde un archivo .env
     env_file:
-      - ~/local-local/.env
+      - ~/turn-o-matic-local/.env
     depends_on:
       postgres:
         condition: service_healthy
