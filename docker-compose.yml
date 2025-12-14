@@ -18,12 +18,17 @@ services:
   backend:
     # image: docker-test.zeroq.cl/zeroq-local:legacy-legacy-v1.22.0
     # image: docker.zeroq.cl/zeroq-local:rest-v2-cruz-verde-qa
-    image: docker.zeroq.cl/zeroq-local:rest-v2-cruz-verde-qa-1
+    image: docker.zeroq.cl/zeroq-local:rest-v2-cruz-verde-cm
+    # image: docker.zeroq.cl/zeroq-local:rest-v2-fasa-2025-1
+    # image: docker.zeroq.cl/zeroq-local:widget-xibo
+    # image: docker.zeroq.cl/zeroq-local:rest-v2-cruz-verde-qa
     container_name: zeroq
     volumes:
       # Montar directorios completos como en la configuración que funciona
       - ./backend/data:/usr/src/app/backend/data # directorio data con .env
       - ./assets:/usr/src/app/displays/assets # logos, videos, etc.
+    ports:
+      - "3030:3030"
     expose:
       - "3030"
     environment:
@@ -37,6 +42,20 @@ services:
       redis:
         condition: service_started
     command: node index.js
+  rut:
+    container_name: rut
+    image: docker.zeroq.cl/zeroq-rut:cla-v2
+    restart: always
+    ports:
+      - 4000:4000
+    expose:
+      - "4000"
+    env_file:
+      - ~/turn-o-matic-local/.env
+    volumes:
+      - ./backend/data:/usr/src/app/backend/data # directorio data con .env
+    depends_on:
+      - redis
 
   postgres:
     container_name: postgres

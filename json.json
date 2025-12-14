@@ -1,0 +1,45 @@
+{
+  "modulo_id": 34074,
+  "current": {
+    "line_id": null,
+    "timestamp": null,
+    "number": null
+  },
+  "meta": {
+    "office_id": 4990,
+    "id": 34074,
+    "modulo_id": 34074,
+    "dataModulo": {
+      "id": 34074,
+      "meta": {
+        "customName": "POS 8"
+      },
+      "name": "POS 8",
+      "office_id": 4990,
+      "priority": 0,
+      "slug": "cruz-verde-local-140-pos-6",
+      "subtype": null,
+      "type": "modulo",
+      "executive": {
+        "name1": "",
+        "name2": "",
+        "name3": "",
+        "rut": ""
+      }
+    }
+  },
+  "rut": null,
+  "status": "offline",
+  "reason": "",
+  "socket_id": "",
+  "name": "POS 6",
+  "elapsed": null,
+  "state": "offline",
+  "old_state": "offline",
+  "last_ping": null,
+  "last_state": null,
+  "inserted_at": null,
+  "updated_at": null,
+  "moduleStatus": "offline",
+  "NOW": null
+}
