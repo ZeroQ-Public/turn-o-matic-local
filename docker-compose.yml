@@ -17,8 +17,9 @@ services:
       - backend
   backend:
     # image: docker-test.zeroq.cl/zeroq-local:legacy-legacy-v1.22.0
-    # image: docker.zeroq.cl/zeroq-local:rest-v2-cruz-verde-qa
-    image: docker.zeroq.cl/zeroq-local:rest-v2-cruz-verde-cm
+    # image: docker-test.zeroq.cl/zeroq-local:new-v3.1.2
+    image: docker.zeroq.cl/zeroq-local:rest-v2-cruz-verde-tts-widget
+    # image: docker.zeroq.cl/zeroq-local:rest-v2-cruz-verde-cm
     # image: docker.zeroq.cl/zeroq-local:rest-v2-fasa-2025-1
     # image: docker.zeroq.cl/zeroq-local:widget-xibo
     # image: docker.zeroq.cl/zeroq-local:rest-v2-cruz-verde-qa
