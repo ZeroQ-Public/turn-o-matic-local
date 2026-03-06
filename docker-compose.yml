@@ -80,6 +80,16 @@ services:
     container_name: redis
     volumes:
       - rddata:/data
+  tts:
+    container_name: tts-api
+    image: docker.zeroq.cl/tts:2.5.2
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    volumes:
+      - ./backend/data/output:/usr/local/app/output
 
 volumes:
   backend-node-modules:
